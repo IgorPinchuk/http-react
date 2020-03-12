@@ -6,11 +6,7 @@ import {Route, NavLink, Switch} from 'react-router-dom';
 import './Blog.css';
 //import asyncComponent from '../../hoc/asyncComponent';
 
-/* const AsyncNewPost = asyncComponent(() => {
-    return import('./NewPost/NewPost');
-}); */
-
-const NewPost = React.lazy(() => import('./OtherComponent'));
+const NewPost = React.lazy(() => import('./NewPost/NewPost'));
 
 class Blog extends Component {
 
@@ -47,7 +43,12 @@ class Blog extends Component {
                 </header>
                 {/* {<Route path="/" exact render={() => <Posts />} />} */}
                 <Switch>
-                    { this.state.auth ? <Route path="/new-post" component={NewPost}/> : null}
+                    { this.state.auth ? <Route path="/new-post" 
+                    render={() =>(
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <NewPost/>
+                        </Suspense>
+                    )}/> : null}
                     <Route path="/posts" component={Posts} />
                     <Route render={()=><h1>404</h1>}/>
                     {/* <Redirect from="/" to="/posts" /> */}
